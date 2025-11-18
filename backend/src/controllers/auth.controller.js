@@ -34,7 +34,7 @@ export const signup = async(req, res) => {
             _id: newUser._id,
             fullName: newUser.fullName,
             email: newUser.email,
-            profilPic: newUser.profilPic
+            profilePic: newUser.profilePic
         })
     } else {
         res.status(400).json({ message: "Invalid user data"})
@@ -65,7 +65,7 @@ export const login = async(req, res) => {
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
-      profilPic: user.profilPic
+      profilePic: user.profilePic
     })
   }
   catch(error){
@@ -77,7 +77,7 @@ export const login = async(req, res) => {
 export const logout = (req, res) => {
   try {
     res.cookie("jwt","",{maxAge:0})
-    res.status(400).json({message: "Logged out successfully"})
+    res.status(200).json({message: "Logged out successfully"})
   }
   catch{
     console.log("Error in logout controller", error.message)
@@ -87,26 +87,26 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const {profilPic} = req.body;
+    const { profilePic } = req.body;
     const userId = req.user._id;
 
-    if(!profilPic) {
-      res.status(400).json({message: "Profile pic is required"})
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profile pic is required" });
     }
 
-    const uploadResponse= await cloudinary.uploader.upload(profilPic);
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
     const updatedUser = await User.findByIdAndUpdate(
-      userId, 
-      {profilePic: uploadResponse.secure_url}, 
-      {new:true}
-    )
-    res.status(200).json(updatedUser)
+      userId,
+      { profilePic: uploadResponse.secure_url },
+      { new: true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log("error in update profile:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-  catch(error) {
-    console.log("Error in update profile", error.message)
-    res.status(500).json({message: "Internal server error"})
-  }
-}
+};
 
 export const checkAuth = (req, res) => {
   try {

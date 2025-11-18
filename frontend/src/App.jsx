@@ -11,10 +11,11 @@ import { useEffect } from "react";
 
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
+import { useThemeStore } from "./store/useThemeStore.js";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAut } = useAuthStore();
-
+  const { theme } = useThemeStore();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -23,12 +24,12 @@ const App = () => {
   if (isCheckingAut && !authUser)
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader classNamw="size-10 animate-spin" />
+        <Loader className="size-10 animate-spin" />
       </div>
     );
 
   return (
-    <div>
+    <div data-theme={theme}>
       <Navbar />
 
       <Routes>
