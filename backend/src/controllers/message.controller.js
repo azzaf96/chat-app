@@ -29,7 +29,7 @@ export const getMessages = async (req, res) => {
             ]
         })
 
-        res.status(200).json(message);
+        res.status(200).json(messages);
     }
     catch (error) {
         console.error("Error in getMessages Controller: ", error.message);
